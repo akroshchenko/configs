@@ -1,0 +1,59 @@
+#!/bin/bash
+
+set -x
+set -e
+
+# Usage
+#  -d = show diff
+#  -u = update config in git repo
+
+DEFAULT_BASH_CONF_PATH='~/.bashrc'
+DEFAULT_TMUX_CONF_PATH="~/.tmux.conf"
+DEFAULT_TERM_CONF_PATH='~/.config/terminator/config'
+
+GetoptsVariables() {
+    while getopts ":d:u:" opt; do
+        case ${opt} in
+            d)
+                SIMPLE_FILE_NAME="${OPTARG}"
+                case "${SIMPLE_FILE_NAME}" in
+                    bashrc|bash)
+                        diff -u $(pwd)/$(basename ${DEFAULT_BASH_CONF_PATH}) ${DEFAULT_BASH_CONF_PATH}
+                        ;;
+                    tmux|tm)
+                        diff -u $(pwd)/$(basename ${DEFAULT_TMUX_CONF_PATH}) ${DEFAULT_TMUX_CONF_PATH}
+                        ;;
+                    terminator|term)
+                        diff -u $(pwd)/"${DEFAULT_TERM_CONF_PATH#*/}" ${DEFAULT_TERM_CONF_PATH}
+                esac
+                ;;
+            u)
+                SIMPLE_FILE_NAME="${OPTARG}"
+                if [ "${SIMPLE_FILE_NAME}" == "all" ];then 
+                    install -v -D ${DEFAULT_BASH_CONF_PATH} $(pwd)/$(basename ${DEFAULT_BASH_CONF_PATH})
+                    install -v -D ${DEFAULT_TMUX_CONF_PATH} $(pwd)/$(basename ${DEFAULT_TMUX_CONF_PATH})
+                    install -v -D ${DEFAULT_TERM_CONF_PATH} $(pwd)/${DEFAULT_TERM_CONF_PATH#*/}
+                fi
+                case "${SIMPLE_FILE_NAME}" in
+                    bashrc|bash)
+                        install -v -D ${DEFAULT_BASH_CONF_PATH} $(pwd)/$(basename ${DEFAULT_BASH_CONF_PATH})
+                        ;;
+                    tmux|tm)
+                        install -v -D ${DEFAULT_TMUX_CONF_PATH} $(pwd)/$(basename ${DEFAULT_TMUX_CONF_PATH})
+                        ;;
+                    terminator|term)
+                        install -v -D  ~/.config/terminator/config /home/akroshchenko/my_git/configs/.config/terminator/config
+                esac
+                ;;
+            *)
+                echo "Wrong option"
+                exit 1
+        esac
+    done
+}
+
+
+
+
+
+GetoptsVariables ${@}
