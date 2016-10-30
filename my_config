@@ -37,7 +37,7 @@ GetoptsVariables() {
                         cp ~/.bashrc $(pwd)/.bashrc
                         ;;
                     tmux|tm)
-                        cp ~/.tmux.conf $(pwd)/.tmux
+                        cp ~/.tmux.conf $(pwd)/.tmux.conf
                         ;;
                     terminator|term)
                         cp ~/.config/terminator/config $(pwd)/.config/terminator/config
