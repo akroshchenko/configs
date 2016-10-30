@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -x
+set -e
+
+# Usage
+#  -d = show diff
+#  -u = update config in git repo
+
+
+
+GetoptsVariables() {
+    while getopts ":d:u:" opt; do
+        case ${opt} in
+            d)
+                SIMPLE_FILE_NAME="${OPTARG}"
+                case "${SIMPLE_FILE_NAME}" in
+                    bashrc|bash)
+                        diff -u ./.bashrc ~/.bashrc
+                        ;;
+                    tmux|tm)
+                        diff -u ./.tmux.conf ~/.tmux.conf
+                        ;;
+                    terminator|term)
+                        diff -u ./.config/terminator/config ~/.config/terminator/config
+                esac
+                ;;
+            u)
+                SIMPLE_FILE_NAME="${OPTARG}"
+                case "${SIMPLE_FILE_NAME}" in
+                    bashrc|bash)
+                        cp ~/.bashrc ./.bashrc
+                        ;;
+                    tmux|tm)
+                        cp ~/.tmux.conf ./.tmux
+                        ;;
+                    terminator|term)
+                        cp ~/.config/terminator/config ./.config/terminator/config
+                esac
+                ;;
+            *)
+                echo "Wrong option"
+                exit 1
+        esac
+    done
+}
+
+
+
+
+
+GetoptsVariables ${@}
+
